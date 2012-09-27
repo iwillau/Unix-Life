@@ -1,0 +1,31 @@
+#!/bin/bash
+
+_ssh_hosts() {
+    local cur
+    local config_hosts
+    local history_hosts
+
+    COMPREPLY=()
+    cur=${COMP_WORDS[COMP_CWORD]}
+
+    # Check for the .ssh/config file first
+    case "$cur" in 
+       -*) 
+           COMPREPLY=( $( compgen -W '-1 -2 -4 -6 -A -a -C -f -g -K -k -M \
+                                      -N -n -q -s -T -t -V -v -X -x -Y -y \
+                                      -b -c -D -e -F -I -i -L -l -m -O -o \
+                                      -p -R -S -W -w' -- $cur ) );;
+       *) 
+           # Look in the SSH Config file
+           config_hosts=( $( compgen -W "$(grep -i '^host' $HOME/.ssh/config|grep -v '*'|cut -d ' ' -f 2)" -- $cur) )
+           # Check the Bash History
+           history_hosts=( $( compgen -W "$(grep '^ssh ' $HOME/.bash_history | sort -u | uniq |sed 's/^ssh //')" -- $cur) )
+           COMPREPLY=( ${config_hosts[@]} ${history_hosts[@]} )
+
+       ;;
+    esac
+
+}
+
+complete -F _ssh_hosts -o default ssh
+
