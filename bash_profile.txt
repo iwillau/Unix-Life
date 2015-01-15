@@ -1,0 +1,32 @@
+
+# Is Colour, Is Good
+alias ls="ls -G"
+alias grep="grep --color=auto"
+
+# Add my GIT_SSH script for my key
+echo "#!/bin/bash" > ~/Downloads/git-key.sh
+echo '/usr/bin/ssh -i ~/projects/pairing_station/users/willw/id_rsa "$@"' >> ~/Downloads/git-key.sh
+chmod 755 ~/Downloads/git-key.sh
+
+export GIT_SSH=$HOME/Downloads/git-key.sh
+
+# Don't search GIT
+export GREP_OPTIONS='-n --exclude-dir=.git'
+
+
+# Turn on vi like semantics for the command line
+set -o vi
+
+
+export EDITOR=vim
+# Revert tools like ps to sysv style
+export COMMAND_MODE=unix2003
+export HISTIGNORE="&:ls:[bf]g:exit"
+export HISTCONTROL=ignoredups
+
+
+# My own SSH autocompletion Stuff
+if [ -f "$HOME/Dropbox/Library/ssh_autocomplete" ]; then
+    . "$HOME/Dropbox/Library/ssh_autocomplete"
+    fi
+
